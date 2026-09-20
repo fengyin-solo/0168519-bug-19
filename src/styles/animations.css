@@ -90,42 +90,6 @@
   }
 }
 
-/* Spin */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Typing Dots */
-@keyframes typingDots {
-  0%, 20% {
-    opacity: 0.3;
-    transform: translateY(0);
-  }
-  50% {
-    opacity: 1;
-    transform: translateY(-3px);
-  }
-  80%, 100% {
-    opacity: 0.3;
-    transform: translateY(0);
-  }
-}
-
-/* Shimmer */
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
 /* Animation Classes */
 .animate-fadeIn {
   animation: fadeIn var(--transition-normal) ease-out;
@@ -157,60 +121,6 @@
 
 .animate-bounce {
   animation: bounce 1s ease-in-out infinite;
-}
-
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-/* Typing Indicator */
-.typing-indicator {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: var(--spacing-sm) var(--spacing-md);
-}
-
-.typing-indicator .dot {
-  width: 8px;
-  height: 8px;
-  background: var(--color-text-tertiary);
-  border-radius: 50%;
-  animation: typingDots 1.4s ease-in-out infinite;
-}
-
-.typing-indicator .dot:nth-child(1) {
-  animation-delay: 0s;
-}
-
-.typing-indicator .dot:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.typing-indicator .dot:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-/* Skeleton Loading */
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--color-bg-tertiary) 25%,
-    var(--color-border-light) 50%,
-    var(--color-bg-tertiary) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s ease-in-out infinite;
-  border-radius: var(--radius-sm);
-}
-
-.skeleton-text {
-  height: 1em;
-  margin-bottom: var(--spacing-sm);
-}
-
-.skeleton-text:last-child {
-  width: 60%;
 }
 
 /* Message Animation */

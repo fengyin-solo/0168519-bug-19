@@ -70,12 +70,13 @@ export class StreamHandler {
         callbacks.onChunk(chunk);
       }
 
-      // 流正常完成
+      // 流正常完成（主动中止时不回调，由中止方决定后续状态）
       if (!this.abortController?.signal.aborted) {
         const stats = this.calculateStats();
         callbacks.onComplete(stats);
       }
     } catch (error) {
+      // 主动中止导致的异常静默处理，不触发 onError
       if (!this.abortController?.signal.aborted) {
         callbacks.onError(error instanceof Error ? error : new Error(String(error)));
       }

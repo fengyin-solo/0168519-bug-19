@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback, KeyboardEvent } from 'react';
 import { Button, Input, message, Tooltip } from 'antd';
 import { SendOutlined, StopOutlined, FileTextOutlined } from '@ant-design/icons';
 import { validateMessageContent } from '../../utils/validators';
+import { Waiting } from '../Common/Waiting';
 import { PromptTemplateLibrary } from '../PromptTemplate';
 import './InputArea.css';
 
@@ -14,6 +15,8 @@ interface InputAreaProps {
   isStreaming: boolean;
   disabled?: boolean;
   placeholder?: string;
+  /** 发送中等待超时后重新开始（重新发送上一条消息） */
+  onRetrySend?: () => void;
 }
 
 /**
@@ -26,6 +29,7 @@ export function InputArea({
   isStreaming,
   disabled = false,
   placeholder = '输入消息，按 Enter 发送，Shift + Enter 换行',
+  onRetrySend,
 }: InputAreaProps) {
   const [content, setContent] = useState('');
   const [templateLibraryOpen, setTemplateLibraryOpen] = useState(false);
@@ -114,28 +118,36 @@ export function InputArea({
           />
 
           <div className="input-actions">
-          {showStopButton ? (
-            <Button
-              type="primary"
-              danger
-              icon={<StopOutlined />}
-              onClick={handleStop}
-              className="stop-button"
-            >
-              停止
-            </Button>
-          ) : (
-            <Button
-              type="primary"
-              icon={<SendOutlined />}
-              onClick={handleSend}
-              loading={isLoading}
-              disabled={isDisabled || !content.trim()}
-              className="send-button"
-            >
-              发送
-            </Button>
-          )}
+            {/* 发送中：统一等待指示（与消息气泡的等待各自独立，不互相顶掉） */}
+            <Waiting
+              waitKey="send-message"
+              active={isLoading}
+              size="small"
+              tip="发送中…"
+              timeoutText="发送时间较长，可能是网络或服务异常，可以重新开始。"
+              onRetry={onRetrySend}
+            />
+            {showStopButton ? (
+              <Button
+                type="primary"
+                danger
+                icon={<StopOutlined />}
+                onClick={handleStop}
+                className="stop-button"
+              >
+                停止
+              </Button>
+            ) : (
+              <Button
+                type="primary"
+                icon={<SendOutlined />}
+                onClick={handleSend}
+                disabled={isDisabled || !content.trim()}
+                className="send-button"
+              >
+                发送
+              </Button>
+            )}
           </div>
         </div>
       </div>

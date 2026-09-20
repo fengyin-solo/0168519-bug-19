@@ -9,6 +9,8 @@ interface MessageListProps {
   messages: Message[];
   isStreaming: boolean;
   streamingMessageId: string | null;
+  /** 重新开始指定消息的回复请求 */
+  onRetryMessage?: (messageId: string) => void;
 }
 
 /**
@@ -18,6 +20,7 @@ export function MessageList({
   messages,
   isStreaming,
   streamingMessageId,
+  onRetryMessage,
 }: MessageListProps) {
   const listRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -53,6 +56,11 @@ export function MessageList({
             key={message.id}
             message={message}
             isStreaming={isStreaming && message.id === streamingMessageId}
+            onRetry={
+              onRetryMessage
+                ? () => onRetryMessage(message.id)
+                : undefined
+            }
           />
         ))}
       </div>

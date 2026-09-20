@@ -1,0 +1,57 @@
+/* 统一的等待指示样式（Waiting） */
+.waiting {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-text-secondary);
+}
+
+.waiting .ant-spin {
+  color: var(--color-primary);
+}
+
+.waiting-tip {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* 尺寸 */
+.waiting-small .waiting-tip {
+  font-size: var(--font-size-xs);
+}
+
+.waiting-large .waiting-tip {
+  font-size: var(--font-size-md);
+}
+
+/* 占满父容器居中（弹窗 / 抽屉 / 整页内容区） */
+.waiting-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 120px;
+  padding: var(--spacing-lg) var(--spacing-md);
+}
+
+/* 超时说明 */
+.waiting-timeout-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.waiting-large .waiting-timeout-text {
+  font-size: var(--font-size-md);
+}
+
+.waiting-retry-btn {
+  padding: 0;
+  height: auto;
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
+.waiting-block .waiting-timeout-text,
+.waiting-block .waiting-retry-btn {
+  text-align: center;
+}

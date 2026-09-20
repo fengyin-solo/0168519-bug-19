@@ -40,6 +40,10 @@ interface ChatActions {
   finishStreaming: (stats?: Message['stats']) => void;
   /** 取消流式响应 */
   cancelStreaming: () => void;
+  /** 丢弃当前流式占位消息（用于重新开始），不重置流式标志 */
+  discardStreamingMessage: () => void;
+  /** 丢弃指定的流式占位消息（用于重新开始），不重置流式标志 */
+  discardMessage: (conversationId: string, messageId: string) => void;
   /** 获取当前活动对话 */
   getActiveConversation: () => Conversation | null;
   /** 清除所有对话 */
@@ -291,7 +295,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       // 保留已接收的内容，但标记为错误状态
       const conversations = state.conversations.map(conv => {
         if (conv.id !== state.activeConversationId) return conv;
-        
+
         const messages = conv.messages.map(msg => {
           if (msg.id !== state.streamingMessageId) return msg;
           return {
@@ -300,15 +304,53 @@ export const useChatStore = create<ChatStore>((set, get) => ({
             status: 'error' as const,
           };
         });
-        
+
         return { ...conv, messages };
       });
-      
+
       debouncedSave(conversations);
-      
+
       return {
         conversations,
         isStreaming: false,
+        streamingContent: '',
+        streamingMessageId: null,
+      };
+    });
+  },
+
+  discardStreamingMessage: () => {
+    const state = get();
+    if (state.activeConversationId && state.streamingMessageId) {
+      get().discardMessage(state.activeConversationId, state.streamingMessageId);
+    }
+  },
+
+  discardMessage: (conversationId, messageId) => {
+    set(state => {
+      const exists = state.conversations.some(conv =>
+        conv.id === conversationId && conv.messages.some(msg => msg.id === messageId),
+      );
+      if (!exists) {
+        return state;
+      }
+
+      const conversations = state.conversations.map(conv => {
+        if (conv.id !== conversationId) return conv;
+        return {
+          ...conv,
+          messages: conv.messages.filter(msg => msg.id !== messageId),
+        };
+      });
+
+      debouncedSave(conversations);
+
+      // 仅当丢弃的正是当前流式消息时才清理流式标记
+      if (state.streamingMessageId !== messageId) {
+        return { conversations };
+      }
+      return {
+        conversations,
         streamingContent: '',
         streamingMessageId: null,
       };

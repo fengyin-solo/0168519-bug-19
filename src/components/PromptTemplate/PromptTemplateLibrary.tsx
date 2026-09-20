@@ -25,6 +25,7 @@ import { DEFAULT_CATEGORIES } from '../../types';
 import { TemplateCard } from './TemplateCard';
 import { TemplateEditorModal } from './TemplateEditorModal';
 import { TemplatePreviewModal } from './TemplatePreviewModal';
+import { Waiting } from '../Common/Waiting';
 import './PromptTemplateLibrary.css';
 
 interface PromptTemplateLibraryProps {
@@ -163,7 +164,17 @@ export function PromptTemplateLibrary({ open, onClose, onUseTemplate }: PromptTe
         </div>
 
         <div className="template-library-content">
-          {filteredTemplates.length === 0 ? (
+          {!initialized ? (
+            <Waiting
+              waitKey="template-library-init"
+              active={open && !initialized}
+              size="large"
+              block
+              tip="正在加载模板…"
+              timeoutText="模板加载时间较长，可能是本地存储读取异常，可以重新开始。"
+              onRetry={initTemplates}
+            />
+          ) : filteredTemplates.length === 0 ? (
             <Empty
               description="没有找到匹配的模板"
               image={Empty.PRESENTED_IMAGE_SIMPLE}
