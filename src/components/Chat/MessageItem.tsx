@@ -4,7 +4,7 @@ import { UserOutlined, RobotOutlined } from '@ant-design/icons';
 import type { Message } from '../../types';
 import { MarkdownRenderer } from '../Common/MarkdownRenderer';
 import { CopyButton } from '../Common/CopyButton';
-import { TypingIndicator } from '../Common/LoadingIndicator';
+import { LoadingIndicator } from '../Common/LoadingIndicator';
 import { formatResponseTime, formatTokenCount } from '../../utils/formatters';
 import './MessageItem.css';
 
@@ -40,7 +40,11 @@ export const MessageItem = memo(function MessageItem({
       <div className="message-content-wrapper">
         <div className={`message-bubble ${message.status}`}>
           {isStreaming && message.status === 'streaming' && !message.content ? (
-            <TypingIndicator />
+            <LoadingIndicator
+              size="small"
+              tip="正在回复…"
+              timeoutTip="等待时间较长，可点击「停止」后重新发送"
+            />
           ) : (
             <div className="message-content">
               {isUser ? (

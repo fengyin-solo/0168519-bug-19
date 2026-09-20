@@ -22,6 +22,7 @@ import {
 import { usePromptTemplateStore } from '../../stores';
 import type { PromptTemplate, CreatePromptTemplateParams } from '../../types';
 import { DEFAULT_CATEGORIES } from '../../types';
+import { LoadingIndicator } from '../Common/LoadingIndicator';
 import { TemplateCard } from './TemplateCard';
 import { TemplateEditorModal } from './TemplateEditorModal';
 import { TemplatePreviewModal } from './TemplatePreviewModal';
@@ -163,7 +164,14 @@ export function PromptTemplateLibrary({ open, onClose, onUseTemplate }: PromptTe
         </div>
 
         <div className="template-library-content">
-          {filteredTemplates.length === 0 ? (
+          {!initialized ? (
+            <LoadingIndicator
+              tip="正在加载模板…"
+              timeoutTip="模板加载时间过长"
+              onRetry={initTemplates}
+              className="template-library-loading"
+            />
+          ) : filteredTemplates.length === 0 ? (
             <Empty
               description="没有找到匹配的模板"
               image={Empty.PRESENTED_IMAGE_SIMPLE}

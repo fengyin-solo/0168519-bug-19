@@ -20,6 +20,11 @@
   padding-right: 8px;
 }
 
+.template-library-loading {
+  justify-content: center;
+  padding: var(--spacing-2xl) 0;
+}
+
 .template-library-content::-webkit-scrollbar {
   width: 6px;
 }
